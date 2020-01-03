@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    app:cardElevation="8dp"
+    android:layout_margin="20dp"
+    android:padding="5dp"
+    app:cardCornerRadius="8dp"
+    android:backgroundTint="#00BCD4"
+
+
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvclass_name_row"
+            android:layout_width="298dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="class - 1"
+            android:textColor="#fff"
+            android:textAlignment="center"
+            android:textSize="16sp"
+
+            app:layout_constraintRight_toLeftOf="@+id/tv_count_row"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_count_row"
+            android:layout_width="31dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="10"
+            android:textColor="#fff"
+            android:textAlignment="center"
+            app:layout_constraintLeft_toRightOf="@+id/tvclass_name_row"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image1_row_id"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+
+            android:padding="8dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvclass_name_row" />
+
+       <!-- <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image2_row_id"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+
+            android:padding="8dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintRight_toLeftOf="@+id/image3_row_id"
+            app:layout_constraintLeft_toRightOf="@id/image1_row_id"
+            app:layout_constraintTop_toBottomOf="@id/tvclass_name_row" />-->
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image3_row_id"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+
+            android:layout_marginEnd="60dp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/tvclass_name_row" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
