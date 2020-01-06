@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_start_end">24dp</dimen>
+    <dimen name="margin_start">16dp</dimen>
+    <dimen name="margin_end">16dp</dimen>
+    <dimen name="margin_top">16dp</dimen>
+    <dimen name="margin_bottom">16dp</dimen>
+    <dimen name="padding_bottom">16dp</dimen>
+
+    <dimen name="text_size">16sp</dimen>
+    <dimen name="elavation">6dp</dimen>
+    <dimen name="margin_high_top">48dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_radius">8dp</dimen>
+    <dimen name="card_elavation">8dp</dimen>
+
+    <dimen name="normal_padding">5dp</dimen>
+    <dimen name="padding_2">2dp</dimen>
+    <dimen name="card_padding">5dp</dimen>
+    <dimen name="image_width">50dp</dimen>
+    <dimen name="image_height">40dp</dimen>
+    <dimen name="image_start">60dp</dimen>
+    <dimen name="image_top">8dp</dimen>
+    <dimen name="image_padding">8dp</dimen>
+    <dimen name="button_width">24dp</dimen>
+    <dimen name="button_height">24dp</dimen>
+
+</resources>

@@ -18,16 +18,31 @@ public class ClassRecyclerAdapter extends RecyclerView
     // create a context, with model list...##
     private Context context;
     private List<StudentClassCountModel> studentClassCountModelList;
-    private StudentItemClickListner studentItemClickListner;
+   // private StudentItemClickListner studentItemClickListner;
+    //this is use to adapter item listener.##
+    StudentItemListener studentItemListener;
+
+
+
+   // private ItemClickListner itemClickListner;
+    //private StudentItemClickListener studentItemClickListener;
+
+
     private ItemClickListner itemClickListner;
 
 
     // create a constructor..##
-    public ClassRecyclerAdapter(Context context, List<StudentClassCountModel> studentClassCountModelList) {
+    public ClassRecyclerAdapter(Context context, List<StudentClassCountModel>
+            studentClassCountModelList) {
         this.context = context;
         this.studentClassCountModelList = studentClassCountModelList;
-        studentItemClickListner = (StudentItemClickListner) context;
+        //studentItemClickListner = (StudentItemClickListner) context;
+        //this is use to adapter item listener..##
+        studentItemListener = (StudentItemListener) context;
         itemClickListner = (ItemClickListner) context;
+        //studentItemClickListener = (StudentItemClickListener) context;
+
+
     }
 
     public void clearAll() {
@@ -35,8 +50,10 @@ public class ClassRecyclerAdapter extends RecyclerView
         notifyDataSetChanged();
     }
 
-    public void setListener(ItemClickListner listener) {
-        this.itemClickListner = listener;
+    public void setListener(StudentListFragment listener) {
+       this.itemClickListner = (ItemClickListner) listener;
+      // this.studentItemClickListener = (StudentItemClickListener) listener;
+
     }
 
     public void addItems(List<StudentClassCountModel> modelList) {
@@ -75,6 +92,7 @@ public class ClassRecyclerAdapter extends RecyclerView
             @Override
             public void onClick(View view) {
                 itemClickListner.clickListener(studentClassCountModel, position);
+                //studentItemClickListener.clickListener(studentClassCountModel, position);
 
             }
         });
@@ -86,7 +104,6 @@ public class ClassRecyclerAdapter extends RecyclerView
         return studentClassCountModelList.size();
     }
 
-
     // create a student View Holder
     public class StudentViewHolder extends RecyclerView.ViewHolder {
 
@@ -96,25 +113,27 @@ public class ClassRecyclerAdapter extends RecyclerView
 
         public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTv = itemView.findViewById(R.id.tvclass_name_row);
-            countTv = itemView.findViewById(R.id.tv_count_row);
+            nameTv = itemView.findViewById(R.id.text_name_row);
+            countTv = itemView.findViewById(R.id.text_count_row);
             constraintLayout = itemView.findViewById(R.id.constraint_layout_id);
         }
     }
 
-    // create a interface for - list adapter to main and StudentModel Record Add Fragment..##
+   /* // create a interface for - list adapter to main and StudentModel Record Add Fragment..##
     public interface StudentItemClickListner {
-
         // abstract method name...##
         void StudentItemClicked(StudentClassCountModel studentClassCountModel);
 
-    }
+    }*/
 
+
+
+    // danger zone..##
     // create a interface for - list adapter to main and StudentModel Details Fragment..##
     public interface ItemClickListner {
-
         //abstract method name..##
         void clickListener(StudentClassCountModel model, int position);
-
     }
+
+
 }

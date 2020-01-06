@@ -3,4 +3,22 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="address">Address</string>
+    <string name="name">Name</string>
+    <string name="roll">Roll</string>
+    <string name="student_name">Student Name : </string>
+    <string name="student_roll">Student Roll : </string>
+    <string name="class_name">Class Name</string>
+    <string name="text_num">100</string>
+
+    <string name="class_1">class - 1</string>
+    <string name="class_2">class - 2</string>
+    <string name="class_3">class - 3</string>
+    <string name="class_4">class - 4</string>
+    <string name="class_5">class - 5</string>
+
+
+
+
+
 </resources>

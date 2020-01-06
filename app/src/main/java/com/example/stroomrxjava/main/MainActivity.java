@@ -6,22 +6,34 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import com.example.stroomrxjava.R;
 import com.example.stroomrxjava.model.StudentClassCountModel;
-import com.example.stroomrxjava.student_details.StudentRecyclerAdapter;
+import com.example.stroomrxjava.student_add.StudentAddUpListener;
+import com.example.stroomrxjava.student_details.StudentEditItemClickListener;
+import com.example.stroomrxjava.student_list.StudentItemListener;
 import com.example.stroomrxjava.student_list.ClassRecyclerAdapter;
 import com.example.stroomrxjava.student_add.StudentAddFragment;
 import com.example.stroomrxjava.student_details.StudentDetailsFragment;
 import com.example.stroomrxjava.student_list.StudentListFragment;
 
 public class MainActivity extends AppCompatActivity implements
-        ClassRecyclerAdapter.StudentItemClickListner,
-        StudentListFragment.AddNewStudentListner,
-        StudentAddFragment.StudentAddRecordCompleteListenr,
+
+
+
+
         ClassRecyclerAdapter.ItemClickListner,
-        StudentRecyclerAdapter.StudentEditItemClickListner,
-        StudentAddFragment.StudentUpdateCompleteListner {
+
+       // StudentItemClickListener,
+
+        //add & adapter listener..
+        StudentItemListener,
+       //add listener
+       // AddNewStudentListner,
+
+        // add & up listener
+        StudentAddUpListener,
+        //edit item click listener.
+        StudentEditItemClickListener{
 
     FragmentManager fragmentManager;
     public androidx.appcompat.widget.Toolbar toolbar;
@@ -36,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         //toolbar id find.
-        toolbar = findViewById(R.id.toolbar_id);
+        toolbar = findViewById(R.id.tool_bar);
         //  toolbar.setTitle("StudentModel Database");
         toolbar.setTitleTextColor(getResources().getColor(R.color.smsp_white_color));
         // toolbar set actionbar.
@@ -50,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         StudentListFragment studentListFragment = new StudentListFragment();
-        ft.add(R.id.fragment_container_id, studentListFragment);
+        ft.add(R.id.fragment_container, studentListFragment);
         ft.commit();
 
     }
@@ -67,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
         bundle.putString("student", model.className);
         studentDetailsFragment.setArguments(bundle);
-        ft.replace(R.id.fragment_container_id, studentDetailsFragment);
+        ft.replace(R.id.fragment_container, studentDetailsFragment);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -83,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
         bundle.putSerializable("studentClassCountModel", studentClassCountModel);
         studentDetailsFragment.setArguments(bundle);
-        ft.replace(R.id.fragment_container_id, studentDetailsFragment);
+        ft.replace(R.id.fragment_container, studentDetailsFragment);
         ft.addToBackStack(null);
         ft.commit();
 
@@ -95,18 +107,18 @@ public class MainActivity extends AppCompatActivity implements
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         StudentAddFragment studentAddFragment = new StudentAddFragment();
-        ft.replace(R.id.fragment_container_id, studentAddFragment);
+        ft.replace(R.id.fragment_container, studentAddFragment);
         ft.addToBackStack(null);
         ft.commit();
     }
 
-    //4th .. implements istener .. ## go to student details activity..##
+    //4th .. implements listener .. ## go to student details activity..##
     @Override
     public void onAddStudentComplete() {
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         StudentListFragment studentListFragment = new StudentListFragment();
-        ft.replace(R.id.fragment_container_id, studentListFragment);
+        ft.replace(R.id.fragment_container, studentListFragment);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -132,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
         bundle.putLong("id",id);
         studentRecordAddFragment.setArguments(bundle);
-        ft.replace(R.id.fragment_container_id, studentRecordAddFragment);
+        ft.replace(R.id.fragment_container, studentRecordAddFragment);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -142,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         StudentListFragment studentRecordListFragment = new StudentListFragment();
-        ft.replace(R.id.fragment_container_id, studentRecordListFragment);
+        ft.replace(R.id.fragment_container, studentRecordListFragment);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -160,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements
             /*case R.id.action_search:
                 searchPressed();
                 break;*/
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -177,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements
            // prevFragment = new StudentDetailsFragment();
             currentFragment = new StudentListFragment();
             flag = true;
-            ft.replace(R.id.fragment_container_id, currentFragment);
+            ft.replace(R.id.fragment_container, currentFragment);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
         } else {

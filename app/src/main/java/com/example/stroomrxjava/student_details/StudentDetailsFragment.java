@@ -89,8 +89,7 @@ public class StudentDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             className = bundle.getString("student");
-            //StudentClassCountModel student = (StudentClassCountModel) bundle.getSerializable("student");
-            //this.className = student.className;
+
         }
 
 
@@ -112,9 +111,9 @@ public class StudentDetailsFragment extends Fragment {
                     StudentModel studentModel = studentModelList.get(i);
 
                     //null point selection..##
-                    if (studentModel.getSpinner()!=null){
-                        if (studentModel.getSpinner()!=null){
-                            if (studentModel.getSpinner().equals(className)){
+                    if (studentModel.getClassName()!=null){
+                        if (studentModel.getClassName()!=null){
+                            if (studentModel.getClassName().equals(className)){
                                 studentModelNewList.add(studentModel);
                             }
                         }
@@ -127,49 +126,11 @@ public class StudentDetailsFragment extends Fragment {
             }
         }));
 
-
-        /*AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-               *//* studentList = StudentDatabase.getInstance(getActivity())
-                        .getStudentDao().getAllStudents();*//*
-
-                *//* studentList = StudentDatabase.getInstance(getActivity())
-                        .getStudentDao().getAllStudents();*//*
-
-                for (int i = 0; i < studentList.size(); i++) {
-                    // student list get position.
-                    StudentModel student = studentList.get(i);
-
-                    //Excellent null point selection..
-                    if (student.getSpinner() != null) {
-                        if (student.getSpinner().equals(className)) {
-                            studentModelNewList.add(student);
-                        }
-                    }
-                }
-                // ui thread Runable codding in java...
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        detailsAdapter = new StudentRecyclerAdapter(context, studentModelNewList);
-                        recyclerDetails.setAdapter(detailsAdapter);
-
-                    }
-                });
-
-            }
-
-
-
-        });*/
-
-
     }
     @Override
     public void onResume() {
         super.onResume();
         //title bar set name.
-        ((MainActivity)getActivity()).toolbar.setTitle("StudentModel Details");
+        ((MainActivity)getActivity()).toolbar.setTitle("Student's Details");
     }
 }

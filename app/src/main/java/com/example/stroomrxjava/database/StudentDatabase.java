@@ -1,7 +1,5 @@
 package com.example.stroomrxjava.database;
-
 import android.content.Context;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -18,14 +16,10 @@ public abstract class StudentDatabase extends RoomDatabase {
     public abstract StudentDAO getStudentDao();
 
 
-    //
     public static StudentDatabase getInstance(Context context){
-
         if (db!=null){
-
             return db;
         }
-
         db = Room.databaseBuilder(context,StudentDatabase.class,"student_db")
                 .allowMainThreadQueries()
                 .build();
@@ -34,18 +28,7 @@ public abstract class StudentDatabase extends RoomDatabase {
 
     }
 
-   /*public static StudentDatabase getInstance(Context context){
 
-       if (db==null){
-
-           db = Room.databaseBuilder(context,StudentDatabase.class,"student_db")
-                   .fallbackToDestructiveMigration()
-                   .build();
-
-       }
-
-       return db;
-   }*/
 
 
 }

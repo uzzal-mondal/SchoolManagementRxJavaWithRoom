@@ -10,7 +10,8 @@ public class StudentClassModel implements Serializable {
     private String className;  // spinner data show..!
     private int roll;
 
-    public StudentClassModel(String name, String address, String className, int roll) {
+    public StudentClassModel(String name, String address,
+                             String className, int roll) {
         this.name = name;
         this.address = address;
         this.className = className;

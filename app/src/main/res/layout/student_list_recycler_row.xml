@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
-    app:cardElevation="8dp"
-    android:layout_margin="20dp"
-    android:padding="5dp"
+    app:cardElevation="@dimen/card_elavation"
+    android:layout_margin="24dp"
+    android:padding="@dimen/card_padding"
     app:cardCornerRadius="8dp"
-    android:backgroundTint="#00BCD4"
-
-
+    android:backgroundTint="@color/background_color"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,73 +18,48 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvclass_name_row"
-            android:layout_width="298dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:text="class - 1"
-            android:textColor="#fff"
-            android:textAlignment="center"
-            android:textSize="16sp"
-
-            app:layout_constraintRight_toLeftOf="@+id/tv_count_row"
+            android:id="@+id/text_name_row"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start_end"
+            android:layout_marginTop="@dimen/margin_top"
+            android:text="@string/class_1"
+            android:textColor="@color/color_white"
+            android:gravity="center"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/text_count_row"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_count_row"
-            android:layout_width="31dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="10"
-            android:textColor="#fff"
+            android:id="@+id/text_count_row"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginEnd="@dimen/margin_start_end"
+            android:background="@drawable/custom_button"
+            android:text="@string/text_num"
+            android:textColor="@color/background_color"
             android:textAlignment="center"
-            app:layout_constraintLeft_toRightOf="@+id/tvclass_name_row"
+            app:layout_constraintLeft_toRightOf="@+id/text_name_row"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image1_row_id"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="@dimen/image_width"
+            android:layout_height="@dimen/image_height"
+            android:layout_marginStart="@dimen/image_start"
+            android:layout_marginTop="@dimen/image_top"
             android:scaleType="centerCrop"
-
-            android:padding="8dp"
-
+            android:padding="@dimen/image_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvclass_name_row" />
+            app:layout_constraintTop_toBottomOf="@id/text_name_row" />
 
-       <!-- <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image2_row_id"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="8dp"
-
-            android:padding="8dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            app:layout_constraintRight_toLeftOf="@+id/image3_row_id"
-            app:layout_constraintLeft_toRightOf="@id/image1_row_id"
-            app:layout_constraintTop_toBottomOf="@id/tvclass_name_row" />-->
-
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image3_row_id"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
-
-            android:layout_marginEnd="60dp"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintTop_toBottomOf="@+id/tvclass_name_row" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

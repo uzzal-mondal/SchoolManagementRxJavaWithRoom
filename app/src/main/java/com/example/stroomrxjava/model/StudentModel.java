@@ -22,40 +22,31 @@ public class StudentModel {
     private int roll;
 
     @ColumnInfo(name = "std_address")
-    private String adress;
+    private String address;
 
 
     // you have to change this is spinner..##
-    @ColumnInfo(name = "std_spinner")
-    private String spinner;
+    @ColumnInfo(name = "std_className")
+    private String className;
 
 
 
     @Ignore
-    public StudentModel(String name, long studentID, int roll, String adress,
-                        String spinner) {
+    public StudentModel(String name, long studentID, int roll, String address,
+                        String className) {
         this.name = name;
         this.studentID = studentID;
         this.roll = roll;
-        this.adress = adress;
-        this.spinner = spinner;
+        this.address = address;
+        this.className = className;
     }
 
-    public StudentModel(String name, int roll, String adress, String spinner) {
+    public StudentModel(String name, int roll,
+                        String address, String className) {
         this.name = name;
         this.roll = roll;
-        this.adress = adress;
-        this.spinner = spinner;
-    }
-
-
-
-    public long getStudentID() {
-        return studentID;
-    }
-
-    public void setStudentID(long studentID) {
-        this.studentID = studentID;
+        this.address = address;
+        this.className = className;
     }
 
     public String getName() {
@@ -66,6 +57,14 @@ public class StudentModel {
         this.name = name;
     }
 
+    public long getStudentID() {
+        return studentID;
+    }
+
+    public void setStudentID(long studentID) {
+        this.studentID = studentID;
+    }
+
     public int getRoll() {
         return roll;
     }
@@ -74,20 +73,19 @@ public class StudentModel {
         this.roll = roll;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getSpinner() {
-        return spinner;
+    public String getClassName() {
+        return className;
     }
 
-    public void setSpinner(String spinner) {
-        this.spinner = spinner;
+    public void setClassName(String className) {
+        this.className = className;
     }
-
 }

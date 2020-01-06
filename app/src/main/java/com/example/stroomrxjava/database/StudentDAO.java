@@ -1,12 +1,10 @@
 package com.example.stroomrxjava.database;
 
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
-
 import com.example.stroomrxjava.model.StudentModel;
 import java.util.List;
 import io.reactivex.Completable;

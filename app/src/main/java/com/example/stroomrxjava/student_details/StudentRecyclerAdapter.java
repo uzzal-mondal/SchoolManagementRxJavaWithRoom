@@ -28,17 +28,18 @@ public class StudentRecyclerAdapter extends
 
 
     private Context context;
-    private List<StudentModel> studentModelViewInfoList;
-    private StudentEditItemClickListner editItemClickListner;
+    private List<StudentModel> studentModelList;
+    private StudentEditItemClickListener editItemClickListner;
 
+    //this is rx java using compositeDisposable..##
     CompositeDisposable compositeDisposable;
 
 
     // private StudentInfoItemClcikListner listner;
-    public StudentRecyclerAdapter(Context context, List<StudentModel> studentModelViewInfoList) {
+    public StudentRecyclerAdapter(Context context, List<StudentModel> studentModelList) {
         this.context = context;
-        this.studentModelViewInfoList = studentModelViewInfoList;
-        editItemClickListner = (StudentEditItemClickListner) context;
+        this.studentModelList = studentModelList;
+        editItemClickListner = (StudentEditItemClickListener) context;
     }
 
     @NonNull
@@ -46,7 +47,7 @@ public class StudentRecyclerAdapter extends
     public StudentInfoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.student_info_details_recycler_row,
+                .inflate(R.layout.student_details_recycler_row,
                         parent, false);
         StudentInfoViewHolder holder = new StudentInfoViewHolder(view);
 
@@ -57,13 +58,13 @@ public class StudentRecyclerAdapter extends
     public void onBindViewHolder(@NonNull StudentInfoViewHolder holder, final int position) {
 
         //position get ..#
-        final StudentModel studentModelViewInfoNewModel = studentModelViewInfoList.get(position);
+        final StudentModel studentModel = studentModelList.get(position);
         // check to null
-        if (studentModelViewInfoNewModel != null) {
-            holder.stName.setText("Name: " + studentModelViewInfoNewModel.getName());
-            holder.stAddress.setText("Address: " + studentModelViewInfoNewModel.getAdress());
-            holder.stRoll.setText("Roll: " + String.valueOf(studentModelViewInfoNewModel.getRoll()));
-            holder.stSpinnerClassShow.setText(String.valueOf(studentModelViewInfoNewModel.getSpinner()));
+        if (studentModel != null) {
+            holder.stName.setText("Name: " + studentModel.getName());
+            holder.stAddress.setText("Address: " + studentModel.getAddress());
+            holder.stRoll.setText("Roll: " + String.valueOf(studentModel.getRoll()));
+            holder.stClassName.setText(String.valueOf(studentModel.getClassName()));
         }
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -87,7 +88,7 @@ public class StudentRecyclerAdapter extends
                                         AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
 
                                 builder.setMessage("Confirm Delete" + " , "
-                                        + studentModelViewInfoNewModel.getName());
+                                        + studentModel.getName());
 
 
                                 builder.setPositiveButton("Yes",
@@ -100,7 +101,7 @@ public class StudentRecyclerAdapter extends
                                                 compositeDisposable.add(StudentDatabase
                                                         .getInstance(context)
                                                         .getStudentDao()
-                                                        .deleteStudent(studentModelViewInfoNewModel)
+                                                        .deleteStudent(studentModel)
                                                         .subscribeOn(Schedulers.io())
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .doOnComplete(new Action() {
@@ -111,8 +112,8 @@ public class StudentRecyclerAdapter extends
                                                                         Toast.LENGTH_SHORT).show();
 
                                                                 // from collection data delete..##
-                                                                studentModelViewInfoList
-                                                                        .remove(studentModelViewInfoNewModel);
+                                                             //   studentModelViewInfoList.remove(studentModelViewInfoNewModel);
+                                                                studentModelList.remove(studentModel);
                                                                 notifyDataSetChanged();
 
                                                             }
@@ -129,11 +130,11 @@ public class StudentRecyclerAdapter extends
 
                             //update info..##
                             case R.id.row_itemEdit_id:
-                                CompositeDisposable compositeDisposable = new CompositeDisposable();
+                                compositeDisposable = new CompositeDisposable();
                                 compositeDisposable.add(StudentDatabase
                                         .getInstance(context)
                                         .getStudentDao()
-                                        .updateStudent(studentModelViewInfoNewModel)
+                                        .updateStudent(studentModel)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .doOnComplete(new Action() {
@@ -141,13 +142,14 @@ public class StudentRecyclerAdapter extends
                                             public void run() throws Exception {
 
 
-                                                long id = studentModelViewInfoNewModel.getStudentID();
+                                                long id = studentModel.getStudentID();
 
-                                                studentModelViewInfoList.add(studentModelViewInfoNewModel);
+                                                studentModelList.add(studentModel);
                                                 editItemClickListner.onStudentEditItemClicked(id);
 
-                                                Toast.makeText(context, "StudentModel Update Info",
-                                                        Toast.LENGTH_SHORT).show();
+
+                                               /* Toast.makeText(context, "Update Your Data",
+                                                        Toast.LENGTH_SHORT).show();*/
 
                                             }
                                         })
@@ -166,30 +168,29 @@ public class StudentRecyclerAdapter extends
 
     @Override
     public int getItemCount() {
-        return studentModelViewInfoList.size();
+        return studentModelList.size();
     }
 
     // my view holder view create..##
     public class StudentInfoViewHolder extends RecyclerView.ViewHolder {
 
-        TextView stName, stRoll, stSpinnerClassShow, stAddress;
+        TextView stName, stRoll, stClassName, stAddress;
         ConstraintLayout constraintLayout;
 
         public StudentInfoViewHolder(@NonNull View itemView) {
             super(itemView);
-            stName = itemView.findViewById(R.id.textName_id);
-            stRoll = itemView.findViewById(R.id.textRoll_id);
-            stSpinnerClassShow = itemView.findViewById(R.id.textSpinnerClass_id);
-            stAddress = itemView.findViewById(R.id.textAdress_id);
+            stName = itemView.findViewById(R.id.text_name);
+            stRoll = itemView.findViewById(R.id.text_roll);
+            stClassName = itemView.findViewById(R.id.text_class_name);
+            stAddress = itemView.findViewById(R.id.text_address);
             constraintLayout = itemView.findViewById(R.id.constraint_info_details_id);
         }
     }
 
-    public interface StudentEditItemClickListner {
+   /* public interface StudentEditItemClickListner {
 
         void onStudentEditItemClicked(long id);
 
-    }
-
+    }*/
 
 }

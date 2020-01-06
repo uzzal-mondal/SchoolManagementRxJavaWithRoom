@@ -40,8 +40,10 @@ public class StudentListFragment extends Fragment implements
     private Context context;
     private ClassRecyclerAdapter classRecyclerAdapter;
     private FloatingActionButton floatingActionButton;
-    private AddNewStudentListner addNewStudentListner;
     private List<StudentClassCountModel> studentClassCountModelList = new ArrayList<>();
+
+    //private AddNewStudentListner addNewStudentListner;
+    private StudentItemListener studentItemListener;
 
 
     // counter declare.
@@ -57,7 +59,7 @@ public class StudentListFragment extends Fragment implements
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-        addNewStudentListner = (AddNewStudentListner) context;
+        studentItemListener = (StudentItemListener) context;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,10 +71,13 @@ public class StudentListFragment extends Fragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        floatingActionButton = view.findViewById(R.id.fab_id);
+        floatingActionButton = view.findViewById(R.id.fab_add);
         recyclerView = view.findViewById(R.id.recycler_fragment_student_list);
-        classRecyclerAdapter = new ClassRecyclerAdapter(getActivity(), new ArrayList<StudentClassCountModel>());
+
+        classRecyclerAdapter = new ClassRecyclerAdapter(context,
+                new ArrayList<StudentClassCountModel>());
         classRecyclerAdapter.setListener(this);
+       // classRecyclerAdapter.setListener(this);
 
         //empty check..##
         if (!studentClassCountModelList.isEmpty()) {
@@ -82,73 +87,73 @@ public class StudentListFragment extends Fragment implements
         //using rx java .. ##
         CompositeDisposable compositeDisposable =  new CompositeDisposable();
         compositeDisposable.add(StudentDatabase.getInstance(getActivity())
-        .getStudentDao()
-        .getAllStudents()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Consumer<List<StudentModel>>() {
-            @Override
-            public void accept(List<StudentModel> studentModels) throws Exception {
+                .getStudentDao()
+                .getAllStudents()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<StudentModel>>() {
+                    @Override
+                    public void accept(List<StudentModel> studentModels) throws Exception {
 
-                StudentClassCountModel model1  = new StudentClassCountModel();
-                StudentClassCountModel model2 = new StudentClassCountModel();
-                StudentClassCountModel model3 = new StudentClassCountModel();
-                StudentClassCountModel model4 = new StudentClassCountModel();
-                StudentClassCountModel model5 = new StudentClassCountModel();
+                        StudentClassCountModel model1  = new StudentClassCountModel();
+                        StudentClassCountModel model2 = new StudentClassCountModel();
+                        StudentClassCountModel model3 = new StudentClassCountModel();
+                        StudentClassCountModel model4 = new StudentClassCountModel();
+                        StudentClassCountModel model5 = new StudentClassCountModel();
 
-                // declare to for each loop countable student get to studentList by :- shapla apu.:)
-                for (StudentModel studentModel : studentModels) {
+                        // declare to for each loop countable student get to studentList by :- shapla apu.:)
+                        for (StudentModel studentModel : studentModels) {
 
-                    if (studentModel.getSpinner() != null) {
+                            if (studentModel.getClassName() != null) {
 
-                        if (studentModel.getSpinner().equals("Class: 1")) {
-                            model1.className = "Class: 1";
-                            class1Counter++;
-                            model1.classCount++;
+                                if (studentModel.getClassName().equals("Class: 1")) {
+                                    model1.className = "Class: 1";
+                                    class1Counter++;
+                                    model1.classCount++;
 
-                        } else if (studentModel.getSpinner().equals("Class: 2")) {
-                            model2.className = "Class: 2";
-                            class2Counter++;
-                            model2.classCount++;
+                                } else if (studentModel.getClassName().equals("Class: 2")) {
+                                    model2.className = "Class: 2";
+                                    class2Counter++;
+                                    model2.classCount++;
 
-                        } else if (studentModel.getSpinner().equals("Class: 3")) {
+                                } else if (studentModel.getClassName().equals("Class: 3")) {
 
-                            model3.className = "Class: 3";
-                            class3Counter++;
-                            model3.classCount++;
+                                    model3.className = "Class: 3";
+                                    class3Counter++;
+                                    model3.classCount++;
 
-                        } else if (studentModel.getSpinner().equals("Class: 4")) {
-                            model4.className = "Class: 4";
-                            class4Counter++;
-                            model4.classCount++;
+                                } else if (studentModel.getClassName().equals("Class: 4")) {
+                                    model4.className = "Class: 4";
+                                    class4Counter++;
+                                    model4.classCount++;
 
-                        } else if (studentModel.getSpinner().equals("Class: 5")) {
+                                } else if (studentModel.getClassName().equals("Class: 5")) {
 
-                            model5.className = "Class: 5";
-                            class5Counter++;
-                            model5.classCount++;
+                                    model5.className = "Class: 5";
+                                    class5Counter++;
+                                    model5.classCount++;
+                                }
+                            }
+
                         }
+
+                        // this is classCountList adding to model.
+                        studentClassCountModelList.add(model1);
+                        studentClassCountModelList.add(model2);
+                        studentClassCountModelList.add(model3);
+                        studentClassCountModelList.add(model4);
+                        studentClassCountModelList.add(model5);
+
+                        classRecyclerAdapter.clearAll();
+                        classRecyclerAdapter.addItems(studentClassCountModelList);
+
+                        LinearLayoutManager lm = new LinearLayoutManager(context);
+
+                        recyclerView.setLayoutManager(lm);
+                        recyclerView.setAdapter(classRecyclerAdapter);
+
                     }
-
-                }
-
-                // this is classCountList adding to model.
-                studentClassCountModelList.add(model1);
-                studentClassCountModelList.add(model2);
-                studentClassCountModelList.add(model3);
-                studentClassCountModelList.add(model4);
-                studentClassCountModelList.add(model5);
-
-                classRecyclerAdapter.clearAll();
-                classRecyclerAdapter.addItems(studentClassCountModelList);
-
-                LinearLayoutManager lm = new LinearLayoutManager(context);
-
-                recyclerView.setLayoutManager(lm);
-                recyclerView.setAdapter(classRecyclerAdapter);
-
-            }
-        }));
+                }));
 
 
         // fab listner to initialize adding to new student data add fragment..##
@@ -156,7 +161,7 @@ public class StudentListFragment extends Fragment implements
             @Override
             public void onClick(View view) {
 
-                addNewStudentListner.loadAddNewStudentPage();
+                studentItemListener.loadAddNewStudentPage();
             }
         });
 
@@ -175,9 +180,14 @@ public class StudentListFragment extends Fragment implements
         ((MainActivity) getActivity()).fragmenttransection(new StudentDetailsFragment(), model);
     }
 
-    // create a interface, go to main activity..##
+
+
+
+
+   /* // create a interface, go to main activity..##
     public interface AddNewStudentListner{
 
         void loadAddNewStudentPage();
     }
+*/
 }
