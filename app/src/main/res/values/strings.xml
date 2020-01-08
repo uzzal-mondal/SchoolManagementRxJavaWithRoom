@@ -17,8 +17,20 @@
     <string name="class_4">class - 4</string>
     <string name="class_5">class - 5</string>
 
-
-
+    <string name="student_model">student</string>
+    <string name="set_name">Name:</string>
+    <string name="st_address">Address:</string>
+    <string name="st_roll">Roll:</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="builder_yes">Yes</string>
+    <string name="builder_no">No</string>
+    <string name="student_class_count_model">studentClassCountModel</string>
+    <string name="student">student</string>
+    <string name="id">id</string>
+    <string name="student_details">Student\'s Details</string>
+    <string name="name_validity">Name, can\'t be Empty</string>
+    <string name="roll_validity">Roll, can\'t be Empty</string>
+    <string name="address_validity">Address, can\'t be Empty</string>
 
 
 </resources>

@@ -1,6 +1,6 @@
 package com.example.stroomrxjava.student_details;
 
-public interface StudentEditItemClickListener {
+public interface StudentEditItemListener {
 
     void onStudentEditItemClicked(long id);
 }

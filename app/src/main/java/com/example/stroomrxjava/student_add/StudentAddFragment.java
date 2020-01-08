@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.stroomrxjava.database.StudentDatabase;
@@ -38,32 +40,20 @@ import io.reactivex.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class StudentAddFragment extends Fragment {
-
-
     private Context context;
-    private AppCompatEditText nameEt, rollEt, addressEt;
-    private String showSpinner;
-
+    private AppCompatEditText name, roll, address;
+    private TextView className;
     private Spinner spinner;
-
-
+    private String spinnerData;
+    private CompositeDisposable compositeDisposable, disposable;
     private StudentModel studentModel;
     //listner
-    //listner
     private StudentAddUpListener studentAddUpListener;
-
-   // private StudentAddRecordCompleteListenr addListenr;
-   // private StudentUpdateCompleteListner updateListner;
-
-   // private StudentAddUpListener addListenr;
-    //private StudentAddUpListener updateListner;
-
     private FloatingActionButton fabSave, fabUp;
-    //count
+
     private long id = 0;
     private int count = 0;
-    androidx.appcompat.widget.Toolbar toolbar;
-    private CompositeDisposable compositeDisposable;
+    public Toolbar toolbar;
 
     //array list for a spinner data...##
     List<String> categories = new ArrayList<>();
@@ -80,8 +70,6 @@ public class StudentAddFragment extends Fragment {
         this.context = context;
         studentAddUpListener = (StudentAddUpListener) context;
 
-        /*addListenr = (StudentAddRecordCompleteListenr) context;
-        updateListner = (StudentUpdateCompleteListner) context;*/
     }
 
     @Override
@@ -95,18 +83,17 @@ public class StudentAddFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        nameEt = view.findViewById(R.id.edit_text_add_name);
-        rollEt = view.findViewById(R.id.edit_text_add_roll);
-        addressEt = view.findViewById(R.id.edit_text_add_address);
+        name = view.findViewById(R.id.edit_text_add_name);
+        roll = view.findViewById(R.id.edit_text_add_roll);
+        address = view.findViewById(R.id.edit_text_add_address);
+        className = view.findViewById(R.id.text_add_class_name);
+
         // spinner show...##
         spinner = view.findViewById(R.id.spinner_id);
-
-
         // fab add and update button working...##
         fabSave = view.findViewById(R.id.fab_save);
         fabUp = view.findViewById(R.id.fab_up);
-        nameEt.requestFocus();
-
+        name.requestFocus();
 
         // create a Array list for a spinner data ..##
         categories.add(0, "Select Class");
@@ -116,107 +103,106 @@ public class StudentAddFragment extends Fragment {
         categories.add("Class: 4");
         categories.add("Class: 5");
 
-        // method initialize..##
-        initSpinner();
-
+        //spinner showing method initialize..##
+        initSpinnerShow();
 
         //data coming and get to arguments.. ##
         final Bundle bundle = getArguments();
         if (bundle != null) {
-
-            /*fabAddButton.setVisibility(View.GONE);
-            fabUpButton.setVisibility(View.VISIBLE);*/
+            // save & up hide this is fab..##
             fabSave.hide();
             fabUp.show();
 
-
-            //this is id include a data from onEditStudent item Clicked..##
-            id = bundle.getLong("id");
-
-
-            //using rx java with call update data..##
-            CompositeDisposable compositeDisposable = new CompositeDisposable();
-            compositeDisposable
-                    .add(StudentDatabase.getInstance(context)
-                            .getStudentDao()
-                            .getStudentById(id)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Consumer<StudentModel>() {
-                                @Override
-                                public void accept(StudentModel studentModel) throws Exception {
-
-                                    // fist check null value. with set to data update ..##
-                                    if (studentModel != null) {
-                                        nameEt.setText(studentModel.getName());
-                                        rollEt.setText(String.valueOf(studentModel.getRoll()));
-                                        addressEt.setText(studentModel.getAddress());
-
-                                        // spinner set an data show ...##
-                                        String spinnerData = studentModel.getClassName();
-                                        for (int i = 0; i < categories.size(); i++) {
-                                            if (categories.get(i).equals(spinnerData)) {
-                                                // categories.remove(i);
-                                                spinner.setSelection(i);
-                                            }
-                                        }
-
-                                    }
-                                    //using error throwable..##
-                                }
-                            }, new Consumer<Throwable>() {
-                                @Override
-                                public void accept(Throwable throwable) throws Exception {
-                                    nameEt.setText(studentModel.getName());
-                                }
-                            }));
-
+            String stId = bundle.getString("id");
+            id = Long.parseLong(stId);
         }
 
+        //using rx java..##
+        compositeDataShowing();
+        // fab update & save data show method..##
+        fabSaveDataShow();
+        fabUpdateDataShow();
+    }
 
+    private void compositeDataShowing() {
+        compositeDisposable = new CompositeDisposable();
+        compositeDisposable
+                .add(StudentDatabase.getInstance(context)
+                        .getStudentDao()
+                        .getStudentById(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<StudentModel>() {
+                            @Override
+                            public void accept(StudentModel studentModel) throws Exception {
+
+                                // fist check null value. with set to data update ..##
+                                if (studentModel != null) {
+                                    name.setText(studentModel.getName());
+                                    roll.setText(String.valueOf(studentModel.getRoll()));
+                                    address.setText(studentModel.getAddress());
+
+                                    // spinner set an data show ...##
+                                    String spinnerData = studentModel.getClassName();
+                                    for (int i = 0; i < categories.size(); i++) {
+                                        if (categories.get(i).equals(spinnerData)) {
+                                            // categories.remove(i);
+                                            spinner.setSelection(i);
+                                        }
+                                    }
+
+                                }
+                                //using error throwable..##
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                Toast.makeText(context, " exception - " + studentModel.getName(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }));
+
+    }
+
+    // fab save method create..##
+    private void fabSaveDataShow() {
         // click to add button,,!!
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (validate()) {
-
+                if (validateCheck()) {
                     count++;
                     Log.d("debug", "validate is true");
-                    // final String rollString = rollEt.getText().toString();
-                    String rolls = rollEt.getText().toString();
-                    Log.d("roll", rolls);
-
+                    // final String rollString = roll.getText().toString();
+                    roll.getText().toString();
+                    // Log.d("roll", rolls);
 
                     try {
-
                         // final int finalRoll = roll;
-                        String name = nameEt.getText().toString();
-                        final int roll = Integer.parseInt(rollEt.getText().toString().trim());
-                        final String address = addressEt.getText().toString();
+                        String name = StudentAddFragment.this.name.getText().toString();
+                        int roll = Integer.parseInt(StudentAddFragment.this.roll.getText().toString().trim());
+                        String address = StudentAddFragment.this.address.getText().toString();
+                        spinner.getSelectedItem();
 
 
                         //this is studentModel name is database access name...
-                        StudentModel studentModel = new StudentModel(name, roll, address, showSpinner);
-
+                        studentModel = new StudentModel(name, roll, address, spinnerData);
 
                         // rx java CompositeDisposable in insert operation....##
-                        CompositeDisposable disposable = new CompositeDisposable();
+                        disposable = new CompositeDisposable();
                         disposable.add(StudentDatabase.getInstance(context).getStudentDao()
                                 .insertNewStudent(studentModel).subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread()).doOnComplete(new Action() {
                                     @Override
                                     public void run() throws Exception {
-
-                                        //addlistener call in android
-
+                                        //add listener  call in android
                                         studentAddUpListener.onAddStudentComplete();
                                     }
                                 }).doOnError(new Consumer<Throwable>() {
                                     @Override
                                     public void accept(Throwable throwable) throws Exception {
-                                        // if any return to false..##
-                                        // addStudentStatus = false;
+                                        Toast.makeText(context, "" + throwable.getMessage(),
+                                                Toast.LENGTH_SHORT).show();
                                     }
                                 }).subscribe());
 
@@ -229,8 +215,10 @@ public class StudentAddFragment extends Fragment {
 
             }
         });
+    }
 
-
+    // fab save update data show create..##
+    private void fabUpdateDataShow() {
 
         // update button click listener..##
         fabUp.setOnClickListener(new View.OnClickListener() {
@@ -240,22 +228,17 @@ public class StudentAddFragment extends Fragment {
                 Toast.makeText(context, "Updated Data",
                         Toast.LENGTH_SHORT).show();
 
-                if (validate()) {
+                if (validateCheck()) {
                     count++;
                     try {
-
-
-                        String name = nameEt.getText().toString();
-                        int roll = Integer.parseInt(rollEt.getText().toString());
-                        String address = addressEt.getText().toString();
-
-                        StudentModel studentModel = new StudentModel(name, roll, address, showSpinner);
+                        String name = StudentAddFragment.this.name.getText().toString();
+                        int roll = Integer.parseInt(StudentAddFragment.this.roll.getText().toString());
+                        String address = StudentAddFragment.this.address.getText().toString();
+                        StudentModel studentModel = new StudentModel(name, roll, address, spinnerData);
 
                         // this is done to update id
                         studentModel.setStudentID(id);
 
-
-                        //when a click working to update by rx..##
                         CompositeDisposable compositeDisposable = new CompositeDisposable();
                         compositeDisposable.add(StudentDatabase.getInstance(context)
                                 .getStudentDao()
@@ -268,77 +251,40 @@ public class StudentAddFragment extends Fragment {
                                         // update listener click..##
                                         studentAddUpListener.onUpdateStudentComplete();
 
-
                                     }
                                 }).subscribe());
 
-
                     } catch (Exception e) {
-
                         Toast.makeText(context, e.toString(),
                                 Toast.LENGTH_SHORT).show();
-
                     }
 
                 }
-
             }
 
         });
 
     }
 
-    // check validity to in your record info added.
-    public boolean validate() {
-
-        String rolls = rollEt.getText().toString();
-        int roll = -1;
-
-        try {
-            roll = Integer.parseInt(rolls.trim());
-
-        } catch (NumberFormatException e) {
-            Toast.makeText(context, "Roll can't be empty Button ",
-                    Toast.LENGTH_SHORT).show();
-        }
-        Log.d("roll", rolls);
-
-        if (roll > -1) {
-
-            return true;
-
-        } else {
-
-            Toast.makeText(context, "Hello Students, Write fields you're required.",
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-    }
-
-
     // crate a method for a spinner...##
-    private void initSpinner() {
+    private void initSpinnerShow() {
         final ArrayAdapter<String> adapter = new
                 ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item,
                 categories);
-        // Dropdown layout style
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // ataching data adapter to spinner
+        // attaching data adapter to spinner
         spinner.setAdapter(adapter);
-
 
         spinner.setSelection(((ArrayAdapter) spinner.getAdapter())
                 .getPosition(spinner.getGravity()));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long l) {
-
                 if (parent.getItemAtPosition(position).equals("Your Class")) {
                     spinner.setSelection(position);
                     // do nothing
                 } else {
-                    showSpinner = parent.getItemAtPosition(position).toString();
+                    spinnerData = parent.getItemAtPosition(position).toString();
                 }
             }
 
@@ -352,6 +298,51 @@ public class StudentAddFragment extends Fragment {
         spinner.setAdapter(adapter);
     }
 
+
+    // check validity to in your record info added.
+    public boolean validateCheck() {
+
+        String roolValidity = roll.getText().toString().trim();
+        String nameValidity = name.getText().toString().trim();
+        String addressValidity = address.getText().toString().trim();
+        String classNameValidity = className.getText().toString().trim();
+
+
+        if (nameValidity.isEmpty()) {
+            name.setError(getString(R.string.name_validity));
+            return false;
+        } else if (roolValidity.isEmpty()) {
+            roll.setError(getString(R.string.roll_validity));
+            return false;
+        } else if (addressValidity.isEmpty()) {
+            address.setError(getString(R.string.address_validity));
+            return false;
+        } /*else if (spinner.getSelectedItem().toString().trim().equals("Select Class")) {
+            className.setError("Class, can't be empty");
+            Toast.makeText(context, "Select your Class", Toast.LENGTH_SHORT).show();
+           return true;
+        }*/
+
+
+        int roll = -1;
+
+        try {
+            roll = Integer.parseInt(roolValidity.trim());
+        } catch (NumberFormatException e) {
+            Toast.makeText(context, "Roll can't be empty Button ",
+                    Toast.LENGTH_SHORT).show();
+        }
+        Log.d("roll", roolValidity);
+        if (roll > -1) {
+            return true;
+        } else {
+            Toast.makeText(context, "Hello Students, Write fields you're required.",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+    }
+
     // this is toolbar name changeable..
     @Override
     public void onResume() {
@@ -359,19 +350,5 @@ public class StudentAddFragment extends Fragment {
         //title bar set name. with cust..
         ((MainActivity) getActivity()).toolbar.setTitle("Student's  Add");
     }
-
-
-   /* //create a interface going to Main Activity for a studentModel details activity..##
-    public interface StudentAddRecordCompleteListenr {
-
-        void onAddStudentComplete();
-
-    }
-    // create a interface by call back go to Main Activity with go to
-    public interface StudentUpdateCompleteListner {
-
-        void onUpdateStudentComplete();
-
-    }*/
 
 }

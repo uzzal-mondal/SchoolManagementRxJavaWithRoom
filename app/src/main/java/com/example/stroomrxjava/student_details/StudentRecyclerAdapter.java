@@ -17,29 +17,37 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.stroomrxjava.database.StudentDatabase;
 import com.example.stroomrxjava.model.StudentModel;
 import com.example.stroomrxjava.R;
-
 import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
+
 public class StudentRecyclerAdapter extends
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentInfoViewHolder> {
 
-
     private Context context;
     private List<StudentModel> studentModelList;
-    private StudentEditItemClickListener editItemClickListner;
-
-    //this is rx java using compositeDisposable..##
-    CompositeDisposable compositeDisposable;
+    private StudentEditItemListener mEditClickListner;
+    private CompositeDisposable compositeDisposable;
 
 
-    // private StudentInfoItemClcikListner listner;
+
     public StudentRecyclerAdapter(Context context, List<StudentModel> studentModelList) {
         this.context = context;
         this.studentModelList = studentModelList;
-        editItemClickListner = (StudentEditItemClickListener) context;
+    }
+
+    public void setListener(StudentEditItemListener mEditClickListner) {
+        this.mEditClickListner = mEditClickListner;
+    }
+
+    public void upListener(){
+
+    }
+
+    public void delListener(){
+
     }
 
     @NonNull
@@ -61,17 +69,16 @@ public class StudentRecyclerAdapter extends
         final StudentModel studentModel = studentModelList.get(position);
         // check to null
         if (studentModel != null) {
-            holder.stName.setText("Name: " + studentModel.getName());
-            holder.stAddress.setText("Address: " + studentModel.getAddress());
-            holder.stRoll.setText("Roll: " + String.valueOf(studentModel.getRoll()));
-            holder.stClassName.setText(String.valueOf(studentModel.getClassName()));
+            holder.textViewName.setText(context.getString(R.string.set_name) + studentModel.getName());
+            holder.textViewAddress.setText(context.getString(R.string.st_address) + studentModel.getAddress());
+            //holder.textViewRoll.setText(context.getString(R.string.st_roll)+ studentModel.getRoll());
+            holder.textViewRoll.setText("Roll: " + studentModel.getRoll());
+            holder.textViewClassName.setText(String.valueOf(studentModel.getClassName()));
         }
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-
-                // click to popup menu ...##
                 PopupMenu popupMenu = new PopupMenu(context, view);
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.menu, popupMenu.getMenu());
@@ -81,20 +88,20 @@ public class StudentRecyclerAdapter extends
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-
-                            // Delete to get all student data...##
                             case R.id.row_itemDelete_id:
                                 AlertDialog.Builder builder = new
                                         AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
 
-                                builder.setMessage("Confirm Delete" + " , "
+                                builder.setMessage(context.getString(R.string.confirm_delete) + " , "
                                         + studentModel.getName());
 
 
-                                builder.setPositiveButton("Yes",
+                                // create a interface
+                                builder.setPositiveButton(R.string.builder_yes,
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
+
 
                                                 // composite disposable delete.. ##
                                                 compositeDisposable = new CompositeDisposable();
@@ -108,27 +115,30 @@ public class StudentRecyclerAdapter extends
                                                             @Override
                                                             public void run() throws Exception {
                                                                 Toast.makeText(context,
-                                                                        " deleted",
+                                                                        "deleted",
                                                                         Toast.LENGTH_SHORT).show();
 
                                                                 // from collection data delete..##
-                                                             //   studentModelViewInfoList.remove(studentModelViewInfoNewModel);
+                                                                //   studentModelViewInfoList.remove(studentModelViewInfoNewModel);
                                                                 studentModelList.remove(studentModel);
                                                                 notifyDataSetChanged();
-
                                                             }
                                                         })
                                                         .subscribe());
 
+
+
+
                                             }
                                         });
-                                builder.setNegativeButton("No", null);
+                                builder.setNegativeButton(R.string.builder_no, null);
                                 AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
+
+
                                 break;
 
 
-                            //update info..##
                             case R.id.row_itemEdit_id:
                                 compositeDisposable = new CompositeDisposable();
                                 compositeDisposable.add(StudentDatabase
@@ -141,15 +151,13 @@ public class StudentRecyclerAdapter extends
                                             @Override
                                             public void run() throws Exception {
 
-
                                                 long id = studentModel.getStudentID();
 
                                                 studentModelList.add(studentModel);
-                                                editItemClickListner.onStudentEditItemClicked(id);
+                                                mEditClickListner.onStudentEditItemClicked(id);
 
-
-                                               /* Toast.makeText(context, "Update Your Data",
-                                                        Toast.LENGTH_SHORT).show();*/
+                                                Toast.makeText(context, "Update Your Data",
+                                                        Toast.LENGTH_SHORT).show();
 
                                             }
                                         })
@@ -159,12 +167,12 @@ public class StudentRecyclerAdapter extends
                         return false;
                     }
                 });
+
                 return false;
             }
         });
 
     }
-
 
     @Override
     public int getItemCount() {
@@ -174,23 +182,16 @@ public class StudentRecyclerAdapter extends
     // my view holder view create..##
     public class StudentInfoViewHolder extends RecyclerView.ViewHolder {
 
-        TextView stName, stRoll, stClassName, stAddress;
+        TextView textViewName, textViewRoll, textViewClassName, textViewAddress;
         ConstraintLayout constraintLayout;
 
         public StudentInfoViewHolder(@NonNull View itemView) {
             super(itemView);
-            stName = itemView.findViewById(R.id.text_name);
-            stRoll = itemView.findViewById(R.id.text_roll);
-            stClassName = itemView.findViewById(R.id.text_class_name);
-            stAddress = itemView.findViewById(R.id.text_address);
-            constraintLayout = itemView.findViewById(R.id.constraint_info_details_id);
+            textViewName = itemView.findViewById(R.id.text_view_name);
+            textViewRoll = itemView.findViewById(R.id.text_view_roll);
+            textViewClassName = itemView.findViewById(R.id.text_class_name);
+            textViewAddress = itemView.findViewById(R.id.text_view_address);
+            constraintLayout = itemView.findViewById(R.id.constraint_details);
         }
     }
-
-   /* public interface StudentEditItemClickListner {
-
-        void onStudentEditItemClicked(long id);
-
-    }*/
-
 }

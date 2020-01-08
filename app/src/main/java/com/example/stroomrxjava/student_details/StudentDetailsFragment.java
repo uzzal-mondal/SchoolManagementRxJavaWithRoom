@@ -35,19 +35,17 @@ public class StudentDetailsFragment extends Fragment {
 
 
     private RecyclerView recyclerDetails;
-   // private TextView nameDt, rollDt, addressDt, classSpDt;
+    // private TextView nameDt, rollDt, addressDt, classSpDt;
     private String className;
-
-   // private List<StudentModel> studentList = new ArrayList<>();
-
     // list of arrayList.
     List<StudentModel> studentModelNewList = new ArrayList<>();
+    private CompositeDisposable compositeDisposable;
+    private StudentModel studentModel;
 
     // adapter er object create.. :)
     private List<StudentClassModel> studentViewInfoNewModels = new ArrayList<>();
     private StudentRecyclerAdapter detailsAdapter;
     androidx.appcompat.widget.Toolbar toolbar;
-
 
     private Context context;
 
@@ -75,12 +73,10 @@ public class StudentDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        // list clear..
-        if(!studentModelNewList.isEmpty()){
+        // check studentModelNewList with list clear..
+        if (!studentModelNewList.isEmpty()) {
             studentModelNewList.clear();
         }
-
         recyclerDetails = view.findViewById(R.id.recycler_fragment_student_details);
         recyclerDetails.setLayoutManager(new LinearLayoutManager(context));
 
@@ -89,48 +85,62 @@ public class StudentDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             className = bundle.getString("student");
-
         }
 
 
+        // using to rx java CompositeDisposable..##
+        comPosingDataShow();
 
-        //using  to Rx java Implementation...##
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
+    }
+
+
+    public void comPosingDataShow() {
+        compositeDisposable = new CompositeDisposable();
         compositeDisposable.add(StudentDatabase.getInstance(getActivity())
                 .getStudentDao()
                 .getAllStudents()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Consumer<List<StudentModel>>() {
-            @Override
-            public void accept(List<StudentModel> studentModelList) throws Exception {
+                .subscribe(new Consumer<List<StudentModel>>() {
+                    @Override
+                    public void accept(List<StudentModel> studentModelList) throws Exception {
 
+                        for (int i = 0; i < studentModelList.size(); i++) {
+                            //studentModel list get position..##
+                            studentModel = studentModelList.get(i);
 
-                for (int i = 0; i< studentModelList.size(); i++){
-                    //studentModel list get position..##
-                    StudentModel studentModel = studentModelList.get(i);
-
-                    //null point selection..##
-                    if (studentModel.getClassName()!=null){
-                        if (studentModel.getClassName()!=null){
-                            if (studentModel.getClassName().equals(className)){
-                                studentModelNewList.add(studentModel);
+                            //null point selection..##
+                            if (studentModel.getClassName() != null) {
+                                if (studentModel.getClassName() != null) {
+                                    if (studentModel.getClassName().equals(className)) {
+                                        studentModelNewList.add(studentModel);
+                                    }
+                                }
                             }
+                            detailsAdapter = new StudentRecyclerAdapter(context, studentModelNewList);
+
+                            detailsAdapter.setListener((StudentEditItemListener) getActivity());
+
+                            recyclerDetails.setAdapter(detailsAdapter);
                         }
                     }
-                    detailsAdapter = new StudentRecyclerAdapter(context, studentModelNewList);
-                    recyclerDetails.setAdapter(detailsAdapter);
-
-                }
-
-            }
-        }));
+                }));
 
     }
+    private void onUpdate(){
+
+
+    }
+
+    private void onDelete(){
+
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         //title bar set name.
-        ((MainActivity)getActivity()).toolbar.setTitle("Student's Details");
+        ((MainActivity) getActivity()).toolbar.setTitle(getString(R.string.student_details));
     }
 }

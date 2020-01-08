@@ -18,17 +18,8 @@ public class ClassRecyclerAdapter extends RecyclerView
     // create a context, with model list...##
     private Context context;
     private List<StudentClassCountModel> studentClassCountModelList;
-   // private StudentItemClickListner studentItemClickListner;
     //this is use to adapter item listener.##
     StudentItemListener studentItemListener;
-
-
-
-   // private ItemClickListner itemClickListner;
-    //private StudentItemClickListener studentItemClickListener;
-
-
-    private ItemClickListner itemClickListner;
 
 
     // create a constructor..##
@@ -36,13 +27,7 @@ public class ClassRecyclerAdapter extends RecyclerView
             studentClassCountModelList) {
         this.context = context;
         this.studentClassCountModelList = studentClassCountModelList;
-        //studentItemClickListner = (StudentItemClickListner) context;
-        //this is use to adapter item listener..##
-        studentItemListener = (StudentItemListener) context;
-        itemClickListner = (ItemClickListner) context;
-        //studentItemClickListener = (StudentItemClickListener) context;
-
-
+        //studentItemListener = (StudentItemListener) context;
     }
 
     public void clearAll() {
@@ -51,23 +36,19 @@ public class ClassRecyclerAdapter extends RecyclerView
     }
 
     public void setListener(StudentListFragment listener) {
-       this.itemClickListner = (ItemClickListner) listener;
-      // this.studentItemClickListener = (StudentItemClickListener) listener;
+       this.studentItemListener = (StudentItemListener) listener;
 
     }
 
     public void addItems(List<StudentClassCountModel> modelList) {
         this.studentClassCountModelList = modelList;
-
         // what is the work this method.. !
         notifyDataSetChanged();
     }
 
-
     @NonNull
     @Override
     public StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(context).inflate(R.layout.student_list_recycler_row,
                 parent, false);
         StudentViewHolder holder = new StudentViewHolder(view);
@@ -76,27 +57,21 @@ public class ClassRecyclerAdapter extends RecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, final int position) {
-
         // adapter data set the list..##
         final StudentClassCountModel studentClassCountModel = studentClassCountModelList.get(position);
 
-        //check to null and get data from class count model..##
         if (studentClassCountModel != null) {
-
-            holder.countTv.setText(String.valueOf(studentClassCountModel.classCount));
-            holder.nameTv.setText(studentClassCountModel.className);
+            holder.textCount.setText(String.valueOf(studentClassCountModel.getClassCount()));
+            holder.textName.setText(studentClassCountModel.getClassName());
         }
-
         // set listener and get model with position..##
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListner.clickListener(studentClassCountModel, position);
-                //studentItemClickListener.clickListener(studentClassCountModel, position);
+                studentItemListener.clickListener(studentClassCountModel, position);
 
             }
         });
-
     }
 
     @Override
@@ -104,36 +79,16 @@ public class ClassRecyclerAdapter extends RecyclerView
         return studentClassCountModelList.size();
     }
 
-    // create a student View Holder
     public class StudentViewHolder extends RecyclerView.ViewHolder {
-
-        // row view item..##
-        AppCompatTextView nameTv, countTv;
+        AppCompatTextView textName, textCount;
         ConstraintLayout constraintLayout;
 
         public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTv = itemView.findViewById(R.id.text_name_row);
-            countTv = itemView.findViewById(R.id.text_count_row);
+            textName = itemView.findViewById(R.id.text_name_row);
+            textCount = itemView.findViewById(R.id.text_count_row);
             constraintLayout = itemView.findViewById(R.id.constraint_layout_id);
         }
     }
-
-   /* // create a interface for - list adapter to main and StudentModel Record Add Fragment..##
-    public interface StudentItemClickListner {
-        // abstract method name...##
-        void StudentItemClicked(StudentClassCountModel studentClassCountModel);
-
-    }*/
-
-
-
-    // danger zone..##
-    // create a interface for - list adapter to main and StudentModel Details Fragment..##
-    public interface ItemClickListner {
-        //abstract method name..##
-        void clickListener(StudentClassCountModel model, int position);
-    }
-
 
 }

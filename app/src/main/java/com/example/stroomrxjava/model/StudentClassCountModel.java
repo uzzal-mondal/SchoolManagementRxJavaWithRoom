@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 public class StudentClassCountModel implements Serializable {
 
-    public String className;
-    public int classCount;
-
-
+    private String className;
+    private int classCount;
 
     public String getClassName() {
         return className;
