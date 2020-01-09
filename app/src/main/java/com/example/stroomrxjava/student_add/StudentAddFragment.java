@@ -44,7 +44,7 @@ public class StudentAddFragment extends Fragment {
     private AppCompatEditText name, roll, address;
     private TextView className;
     private Spinner spinner;
-    private String spinnerData;
+    private String spinnerData = "";
     private CompositeDisposable compositeDisposable, disposable;
     private StudentModel studentModel;
     //listner
@@ -116,7 +116,6 @@ public class StudentAddFragment extends Fragment {
             String stId = bundle.getString("id");
             id = Long.parseLong(stId);
         }
-
         //using rx java..##
         compositeDataShowing();
         // fab update & save data show method..##
@@ -182,8 +181,6 @@ public class StudentAddFragment extends Fragment {
                         String name = StudentAddFragment.this.name.getText().toString();
                         int roll = Integer.parseInt(StudentAddFragment.this.roll.getText().toString().trim());
                         String address = StudentAddFragment.this.address.getText().toString();
-                        spinner.getSelectedItem();
-
 
                         //this is studentModel name is database access name...
                         studentModel = new StudentModel(name, roll, address, spinnerData);
@@ -265,7 +262,6 @@ public class StudentAddFragment extends Fragment {
         });
 
     }
-
     // crate a method for a spinner...##
     private void initSpinnerShow() {
         final ArrayAdapter<String> adapter = new
@@ -280,9 +276,8 @@ public class StudentAddFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long l) {
-                if (parent.getItemAtPosition(position).equals("Your Class")) {
+                if (parent.getItemAtPosition(position).equals("Select Class")) {
                     spinner.setSelection(position);
-                    // do nothing
                 } else {
                     spinnerData = parent.getItemAtPosition(position).toString();
                 }
@@ -298,15 +293,10 @@ public class StudentAddFragment extends Fragment {
         spinner.setAdapter(adapter);
     }
 
-
-    // check validity to in your record info added.
-    public boolean validateCheck() {
-
+    private boolean validateCheck() {
         String roolValidity = roll.getText().toString().trim();
         String nameValidity = name.getText().toString().trim();
         String addressValidity = address.getText().toString().trim();
-        String classNameValidity = className.getText().toString().trim();
-
 
         if (nameValidity.isEmpty()) {
             name.setError(getString(R.string.name_validity));
@@ -317,28 +307,11 @@ public class StudentAddFragment extends Fragment {
         } else if (addressValidity.isEmpty()) {
             address.setError(getString(R.string.address_validity));
             return false;
-        } /*else if (spinner.getSelectedItem().toString().trim().equals("Select Class")) {
-            className.setError("Class, can't be empty");
-            Toast.makeText(context, "Select your Class", Toast.LENGTH_SHORT).show();
-           return true;
-        }*/
-
-
-        int roll = -1;
-
-        try {
-            roll = Integer.parseInt(roolValidity.trim());
-        } catch (NumberFormatException e) {
-            Toast.makeText(context, "Roll can't be empty Button ",
-                    Toast.LENGTH_SHORT).show();
-        }
-        Log.d("roll", roolValidity);
-        if (roll > -1) {
-            return true;
-        } else {
-            Toast.makeText(context, "Hello Students, Write fields you're required.",
-                    Toast.LENGTH_SHORT).show();
+        } else if (spinnerData.equals("")) {
+            Toast.makeText(getActivity(), "Please select your class", Toast.LENGTH_SHORT).show();
             return false;
+        } else {
+            return true;
         }
 
     }

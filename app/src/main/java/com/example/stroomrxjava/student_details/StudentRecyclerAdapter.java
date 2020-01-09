@@ -1,8 +1,6 @@
 package com.example.stroomrxjava.student_details;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,18 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.stroomrxjava.database.StudentDatabase;
 import com.example.stroomrxjava.model.StudentModel;
 import com.example.stroomrxjava.R;
 import java.util.List;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Action;
-import io.reactivex.schedulers.Schedulers;
+
 
 public class StudentRecyclerAdapter extends
         RecyclerView.Adapter<StudentRecyclerAdapter.StudentInfoViewHolder> {
@@ -29,25 +23,21 @@ public class StudentRecyclerAdapter extends
     private Context context;
     private List<StudentModel> studentModelList;
     private StudentEditItemListener mEditClickListner;
+
     private CompositeDisposable compositeDisposable;
+    private AdapterUpDelListener adapterUpDelListener;
 
 
-
-    public StudentRecyclerAdapter(Context context, List<StudentModel> studentModelList) {
+    public StudentRecyclerAdapter(Context context, List<StudentModel> studentModelList,
+                                  AdapterUpDelListener mAdapterUpDelListener) {
         this.context = context;
         this.studentModelList = studentModelList;
+        //this.mUpdateListener = mUpdateListener;
+        this.adapterUpDelListener = mAdapterUpDelListener;
     }
 
     public void setListener(StudentEditItemListener mEditClickListner) {
         this.mEditClickListner = mEditClickListner;
-    }
-
-    public void upListener(){
-
-    }
-
-    public void delListener(){
-
     }
 
     @NonNull
@@ -58,7 +48,7 @@ public class StudentRecyclerAdapter extends
                 .inflate(R.layout.student_details_recycler_row,
                         parent, false);
         StudentInfoViewHolder holder = new StudentInfoViewHolder(view);
-
+       // return new StudentInfoViewHolder(view);
         return holder;
     }
 
@@ -89,79 +79,11 @@ public class StudentRecyclerAdapter extends
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.row_itemDelete_id:
-                                AlertDialog.Builder builder = new
-                                        AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
-
-                                builder.setMessage(context.getString(R.string.confirm_delete) + " , "
-                                        + studentModel.getName());
-
-
-                                // create a interface
-                                builder.setPositiveButton(R.string.builder_yes,
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-
-
-                                                // composite disposable delete.. ##
-                                                compositeDisposable = new CompositeDisposable();
-                                                compositeDisposable.add(StudentDatabase
-                                                        .getInstance(context)
-                                                        .getStudentDao()
-                                                        .deleteStudent(studentModel)
-                                                        .subscribeOn(Schedulers.io())
-                                                        .observeOn(AndroidSchedulers.mainThread())
-                                                        .doOnComplete(new Action() {
-                                                            @Override
-                                                            public void run() throws Exception {
-                                                                Toast.makeText(context,
-                                                                        "deleted",
-                                                                        Toast.LENGTH_SHORT).show();
-
-                                                                // from collection data delete..##
-                                                                //   studentModelViewInfoList.remove(studentModelViewInfoNewModel);
-                                                                studentModelList.remove(studentModel);
-                                                                notifyDataSetChanged();
-                                                            }
-                                                        })
-                                                        .subscribe());
-
-
-
-
-                                            }
-                                        });
-                                builder.setNegativeButton(R.string.builder_no, null);
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-
-
+                               adapterUpDelListener.onDelete(studentModel);
                                 break;
 
-
                             case R.id.row_itemEdit_id:
-                                compositeDisposable = new CompositeDisposable();
-                                compositeDisposable.add(StudentDatabase
-                                        .getInstance(context)
-                                        .getStudentDao()
-                                        .updateStudent(studentModel)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .doOnComplete(new Action() {
-                                            @Override
-                                            public void run() throws Exception {
-
-                                                long id = studentModel.getStudentID();
-
-                                                studentModelList.add(studentModel);
-                                                mEditClickListner.onStudentEditItemClicked(id);
-
-                                                Toast.makeText(context, "Update Your Data",
-                                                        Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        })
-                                        .subscribe());
+                                adapterUpDelListener.onUpdate(studentModel);
                                 break;
                         }
                         return false;
@@ -194,4 +116,21 @@ public class StudentRecyclerAdapter extends
             constraintLayout = itemView.findViewById(R.id.constraint_details);
         }
     }
+
+    public void removeItem(StudentModel studentModel){
+        if (!studentModelList.isEmpty() && studentModelList.contains(studentModel)){
+            studentModelList.remove(studentModel);
+            studentModelList.clear();
+            notifyDataSetChanged();
+        }
+    }
+
+    public void updateItem(StudentModel studentModel){
+        if (!studentModelList.isEmpty() && studentModelList.contains(studentModel)){
+            studentModelList.add(studentModel);
+            mEditClickListner.onStudentEditItemClicked(studentModel.getStudentID());
+            notifyDataSetChanged();
+        }
+    }
+
 }

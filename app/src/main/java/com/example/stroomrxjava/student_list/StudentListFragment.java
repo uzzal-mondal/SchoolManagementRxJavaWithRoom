@@ -19,6 +19,7 @@ import com.example.stroomrxjava.database.StudentDatabase;
 import com.example.stroomrxjava.main.MainActivity;
 import com.example.stroomrxjava.model.StudentModel;
 import com.example.stroomrxjava.R;
+import com.example.stroomrxjava.student_details.AdapterUpDelListener;
 import com.example.stroomrxjava.student_details.StudentDetailsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,7 +31,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-
+/**
+ * A simple {@link Fragment} subclass.
+ */
 public class StudentListFragment extends Fragment implements
         StudentItemListener {
 
@@ -41,6 +44,7 @@ public class StudentListFragment extends Fragment implements
     private List<StudentClassCountModel> studentClassCountModelList = new ArrayList<>();
     private CompositeDisposable compositeDisposable;
     private StudentClassCountModel model1, model2, model3, model4, model5;
+    //private AddNewStudentListner addNewStudentListner;
     private StudentItemListener studentItemListener;
 
     // counter declare.
@@ -48,7 +52,7 @@ public class StudentListFragment extends Fragment implements
             class4Counter = 0, class5Counter = 0, count = 0;
 
     public StudentListFragment() {
-
+        // Required empty public constructor
     }
 
     @Override
@@ -73,6 +77,7 @@ public class StudentListFragment extends Fragment implements
                 new ArrayList<StudentClassCountModel>());
         classRecyclerAdapter.setListener(this);
 
+        //empty check..##
         if (!studentClassCountModelList.isEmpty()) {
             studentClassCountModelList.clear();
         }
@@ -84,6 +89,8 @@ public class StudentListFragment extends Fragment implements
 
     // onView created is ending part..##
     public void fabAddShow() {
+
+        // fab listner to initialize adding to new student data add fragment..##
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,5 +191,6 @@ public class StudentListFragment extends Fragment implements
                     }
                 }));
     }
+
 
 }
